@@ -1,6 +1,6 @@
 VERSION = 3
 PATCHLEVEL = 0
-SUBLEVEL = 52
+SUBLEVEL = 54
 EXTRAVERSION =
 NAME = Sneaky Weasel
 
@@ -566,7 +566,7 @@ endif # $(dot-config)
 all: vmlinux
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS	+= -O3
+KBUILD_CFLAGS	+= -Os
 else
 KBUILD_CFLAGS	+= -O3
 endif
