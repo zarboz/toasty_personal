@@ -1114,7 +1114,7 @@ static ssize_t ps_adc_show(struct device *dev,
 			struct device_attribute *attr, char *buf)
 {
 
-	uint8_t value;
+	uint8_t value = 0;
 	int ret;
 	struct cm3628_info *lpi = lp_info;
 	int value1;
