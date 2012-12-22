@@ -2554,7 +2554,7 @@ static const char *vregs_tsadc_name[] = {
 	"gp12",
 	"s2",
 };
-static struct vreg *vregs_tsadc[ARRAY_SIZE(vregs_tsadc_name)];
+static struct vreg *vregs_tsadc[(ARRAY_SIZE(vregs_tsadc_name)+1)];
 
 static const char *vregs_timpani_tsadc_name[] = {
 	"s3",
