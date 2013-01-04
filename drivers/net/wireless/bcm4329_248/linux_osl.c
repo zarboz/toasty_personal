@@ -55,7 +55,7 @@ typedef struct bcm_static_buf {
 
 static bcm_static_buf_t *bcm_static_buf = 0;
 
-#define MAX_STATIC_PKT_NUM 8
+#define MAX_STATIC_PKT_NUM 9
 typedef struct bcm_static_pkt {
 	struct sk_buff *skb_4k[MAX_STATIC_PKT_NUM];
 	struct sk_buff *skb_8k[MAX_STATIC_PKT_NUM];

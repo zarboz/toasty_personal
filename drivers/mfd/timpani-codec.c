@@ -49,7 +49,7 @@ enum refcnt {
 };
 #define TIMPANI_ARRAY_SIZE	(TIMPANI_A_CDC_COMP_HALT + 1)
 
-static u8 timpani_shadow[TIMPANI_ARRAY_SIZE];
+static u8 timpani_shadow[(2*TIMPANI_ARRAY_SIZE)];
 
 struct adie_codec_path {
 	struct adie_codec_dev_profile *profile;
