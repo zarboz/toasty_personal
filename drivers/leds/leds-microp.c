@@ -103,7 +103,7 @@ static void microp_led_jogball_brightness_set(struct led_classdev *led_cdev,
 	struct microp_led_data *ldata;
 	unsigned long flags;
 	uint8_t data[3] = {0, 0, 0};
-	int ret = 0;
+	int b, ret = 0;
 
 	ldata = container_of(led_cdev, struct microp_led_data, ldev);
 
@@ -111,7 +111,9 @@ static void microp_led_jogball_brightness_set(struct led_classdev *led_cdev,
 	ldata->brightness = brightness;
 	spin_unlock_irqrestore(&ldata->brightness_lock, flags);
 
-	switch (brightness) {
+	b = brightness;
+
+	switch (b) {
 	case 0:
 		data[0] = 0;
 		break;
@@ -149,7 +151,7 @@ static void microp_led_wimax_brightness_set(struct led_classdev *led_cdev,
 	struct microp_led_data *ldata;
 	unsigned long flags;
 	uint8_t data[3] = {0, 0, 0};
-	int ret = 0;
+	int b, ret = 0;
 
 	ldata = container_of(led_cdev, struct microp_led_data, ldev);
 
@@ -157,7 +159,9 @@ static void microp_led_wimax_brightness_set(struct led_classdev *led_cdev,
 	ldata->brightness = brightness;
 	spin_unlock_irqrestore(&ldata->brightness_lock, flags);
 
-	switch (brightness) {
+	b = brightness;
+
+	switch (b) {
 	case 0:
 		data[0] = 0;
 		break;
