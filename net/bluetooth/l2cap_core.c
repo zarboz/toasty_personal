@@ -1254,7 +1254,7 @@ int l2cap_do_connect(struct sock *sk)
 	struct hci_conn *hcon;
 	struct hci_dev *hdev;
 	__u8 auth_type;
-	int err;
+	int err = 0;
 
 	BT_DBG("%s -> %s psm 0x%2.2x", batostr(src), batostr(dst),
 							l2cap_pi(sk)->psm);
@@ -2458,7 +2458,7 @@ static inline int l2cap_skbuff_to_kvec(struct sk_buff *skb, struct kvec *iv,
 int l2cap_resegment_queue(struct sock *sk, struct sk_buff_head *queue)
 {
 	void *buf;
-	int buflen;
+	int buflen = 0;
 	int err = 0;
 	struct sk_buff *skb;
 	struct msghdr msg;
