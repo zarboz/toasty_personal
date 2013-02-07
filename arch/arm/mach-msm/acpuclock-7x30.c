@@ -91,8 +91,13 @@ static struct pll pll2_tbl[] = {
 	{  42, 0, 1, 0 }, /*  806 MHz */
 	{  53, 1, 3, 0 }, /* 1024 MHz */
 	{ 125, 0, 1, 1 }, /* 1200 MHz */
-	{  73, 0, 1, 0 }, /* 1401 MHz */
-	{  78, 0, 1, 0 }, /* 1500 MHz */
+	{ 136, 0, 1, 1 }, /* 1305600 MHz */
+	{ 146, 0, 1, 1 }, /* 1401600 MHz */
+	{ 158, 0, 1, 1 }, /* 1516800 MHz */
+	{ 160, 0, 1, 1 }, /* 1536000 MHz */
+	{ 168, 0, 1, 1 }, /* 1612800 MHz */
+	{ 178, 0, 1, 1 }, /* 1708800 MHz */
+	{ 188, 0, 1, 1 }, /* 1804800 MHz */
 };
 
 /* Use negative numbers for sources that can't be enabled/disabled */
@@ -116,24 +121,34 @@ static struct clk *acpuclk_sources[MAX_SOURCE];
  * know all the h/w requirements.
  */
 static struct clkctl_acpu_speed acpu_freq_tbl[] = {
-	{ 0, 24576,  LPXO, 0, 0,  30720000,  1000, VDD_RAW(1000) },
-	{ 0, 61440,  PLL_3,    5, 11, 61440000,  1000, VDD_RAW(1000) },
-	{ 0, 122880, PLL_3,    5, 5,  61440000,  1000, VDD_RAW(1000) },
-	{ 0, 184320, PLL_3,    5, 4,  61440000,  1000, VDD_RAW(1000) },
-	{ 0, MAX_AXI_KHZ, AXI, 1, 0, 61440000, 1000, VDD_RAW(1000) },
-	{ 1, 245760, PLL_3,    5, 2,  61440000,  1000, VDD_RAW(1000) },
-	{ 1, 368640, PLL_3,    5, 1,  122800000, 1050, VDD_RAW(1050) },
+	{ 0, 24576,  LPXO, 0, 0,  30720000,  900, VDD_RAW(900) },
+	{ 0, 61440,  PLL_3,    5, 11, 61440000,  900, VDD_RAW(900) },
+	{ 0, 122880, PLL_3,    5, 5,  61440000,  900, VDD_RAW(900) },
+	{ 0, 184320, PLL_3,    5, 4,  61440000,  900, VDD_RAW(900) },
+	{ 0, MAX_AXI_KHZ, AXI, 1, 0, 61440000, 900, VDD_RAW(900) },
+	{ 1, 245760, PLL_3,    5, 2,  61440000,  900, VDD_RAW(900) },
+	{ 1, 368640, PLL_3,    5, 1,  122800000, 925, VDD_RAW(925) },
 	/* AXI has MSMC1 implications. See above. */
-	{ 1, 768000, PLL_1,    2, 0,  153600000, 1100, VDD_RAW(1100) },
+	{ 1, 768000, PLL_1,    2, 0,  153600000, 1000, VDD_RAW(1000) },
 	/*
 	 * AXI has MSMC1 implications. See above.
 	 */
-	{ 1, 806400,  PLL_2, 3, 0, UINT_MAX, 1100, VDD_RAW(1100), &pll2_tbl[0]},
-	{ 1, 1024000, PLL_2, 3, 0, UINT_MAX, 1200, VDD_RAW(1200), &pll2_tbl[1]},
-	{ 1, 1200000, PLL_2, 3, 0, UINT_MAX, 1200, VDD_RAW(1200), &pll2_tbl[2]},
-	{ 1, 1401600, PLL_2, 3, 0, UINT_MAX, 1250, VDD_RAW(1250), &pll2_tbl[3]},
-	{ 1, 1497600, PLL_2, 3, 0, UINT_MAX, 1250, VDD_RAW(1250), &pll2_tbl[4]},
+	{ 1, 806400,  PLL_2, 3, 0, 192000000, 1025, VDD_RAW(1025), &pll2_tbl[0]},
+	{ 1, 1024000, PLL_2, 3, 0, 192000000, 1075, VDD_RAW(1075), &pll2_tbl[1]},
+	{ 1, 1200000, PLL_2, 3, 0, 192000000, 1100, VDD_RAW(1100), &pll2_tbl[2]},
+	{ 1, 1305600, PLL_2, 3, 0, 192000000, 1150, VDD_RAW(1150), &pll2_tbl[3]},
+	{ 1, 1401600, PLL_2, 3, 0, 192000000, 1225, VDD_RAW(1225), &pll2_tbl[4]},
+	{ 1, 1516800, PLL_2, 3, 0, 192000000, 1300, VDD_RAW(1300), &pll2_tbl[5]},
+#ifdef CONFIG_JESUS_PHONE
+	{ 1, 1536000, PLL_2, 3, 0, 192000000, 1300, VDD_RAW(1300), &pll2_tbl[6]},
+	{ 1, 1612800, PLL_2, 3, 0, 192000000, 1350, VDD_RAW(1350), &pll2_tbl[7]},
+	{ 1, 1708800, PLL_2, 3, 0, 192000000, 1400, VDD_RAW(1400) ,&pll2_tbl[8]},
+	{ 1, 1804800, PLL_2, 3, 0, 192000000, 1450, VDD_RAW(1450) ,&pll2_tbl[9]},
 	{ 0 }
+#else
+	{0}
+#endif
+
 };
 
 static int acpuclk_set_acpu_vdd(struct clkctl_acpu_speed *s)
@@ -157,6 +172,11 @@ static int acpuclk_set_acpu_vdd(struct clkctl_acpu_speed *s)
 				__func__, s->vdd_mv, ret);
 	else /* Wait for voltage to stabilize. */
 		udelay(62);
+
+#ifdef	CONFIG_ACPUCLOCK_OVERCLOCKING
+	if (!ret)
+		return 0;
+#endif
 
 	return ret;
 }
@@ -453,11 +473,13 @@ static inline void setup_cpufreq_table(void) { }
 void __init pll2_fixup(void)
 {
 	struct clkctl_acpu_speed *speed = acpu_freq_tbl;
+#ifndef	CONFIG_ACPUCLOCK_OVERCLOCKING
 	u8 pll2_l = readl_relaxed(PLL2_L_VAL_ADDR) & 0xFF;
-
+#endif
 	for ( ; speed->acpu_clk_khz; speed++) {
 		if (speed->src != PLL_2)
 			backup_s = speed;
+#ifndef	CONFIG_ACPUCLOCK_OVERCLOCKING
 		/* Base on PLL2_L_VAL_ADDR to switch acpu speed */
 		else {
 			if (speed->pll_rate && speed->pll_rate->l != pll2_l)
@@ -468,10 +490,13 @@ void __init pll2_fixup(void)
 			speed->acpu_clk_khz = 0;
 			return;
 		}
+#endif
 	}
 
+#ifndef	CONFIG_ACPUCLOCK_OVERCLOCKING	
 	pr_err("Unknown PLL2 lval %d\n", pll2_l);
 	BUG();
+#endif
 }
 
 #define RPM_BYPASS_MASK	(1 << 3)
