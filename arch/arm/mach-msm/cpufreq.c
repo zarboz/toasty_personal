@@ -84,6 +84,12 @@ static void set_cpu_work(struct work_struct *work)
 	complete(&cpu_work->complete);
 }
 #endif
+#ifdef CONFIG_CPU_FREQ_DEFAULT_GOV_SMARTASSV2
+char cmdline_gov[16] = "smartassV2";
+#endif
+#ifdef CONFIG_CPU_FREQ_DEFAULT_GOV_LAGFREE
+char cmdline_gov[16] = "lagfree";
+#endif
 
 static int msm_cpufreq_target(struct cpufreq_policy *policy,
 				unsigned int target_freq,
