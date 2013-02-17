@@ -30,7 +30,7 @@
 #include <linux/mutex.h>
 #include <mach/perflock.h>
 #include <linux/syscore_ops.h>
-
+#include <linux/sched.h>
 #include <trace/events/power.h>
 
 /**

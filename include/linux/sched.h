@@ -1615,6 +1615,7 @@ static inline int above_background_load(void)
 }
 
 extern int runqueue_is_locked(int cpu);
+/*
 static inline void cpu_scaling(int cpu)
 {
 }
@@ -1622,9 +1623,11 @@ static inline void cpu_scaling(int cpu)
 static inline void cpu_nonscaling(int cpu)
 {
 }
+*/
 #define tsk_seruntime(t)	((t)->se.sum_exec_runtime)
 #define tsk_rttimeout(t)	((t)->rt.timeout)
 
+/*
 static inline void tsk_cpus_current(struct task_struct *p)
 {
 	p->rt.nr_cpus_allowed = current->rt.nr_cpus_allowed;
@@ -1643,12 +1646,14 @@ static inline bool iso_task(struct task_struct *p)
 static inline void remove_cpu(int cpu)
 {
 }
-
+*/
 /* Anyone feel like implementing this? */
+/*
 static inline int above_background_load(void)
 {
 	return 1;
 }
+*/
 
 /* Future-safe accessor for struct task_struct's cpus_allowed. */
 #define tsk_cpus_allowed(tsk) (&(tsk)->cpus_allowed)
