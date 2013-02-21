@@ -28,9 +28,10 @@
 #include <linux/cpu.h>
 #include <linux/completion.h>
 #include <linux/mutex.h>
+#include <linux/sched.h>
 #include <mach/perflock.h>
 #include <linux/syscore_ops.h>
-#include <linux/sched.h>
+
 #include <trace/events/power.h>
 
 /**
@@ -71,6 +72,7 @@ static DEFINE_SPINLOCK(cpufreq_driver_lock);
  */
 static DEFINE_PER_CPU(int, cpufreq_policy_cpu);
 static DEFINE_PER_CPU(struct rw_semaphore, cpu_policy_rwsem);
+DEFINE_PER_CPU(int, cpufreq_init_done);
 
 #define lock_policy_rwsem(mode, cpu)					\
 int lock_policy_rwsem_##mode						\
@@ -982,6 +984,7 @@ static int cpufreq_add_dev(struct sys_device *sys_dev)
 	kobject_uevent(&policy->kobj, KOBJ_ADD);
 	module_put(cpufreq_driver->owner);
 	pr_debug("initialization complete\n");
+	per_cpu(cpufreq_init_done, cpu) = 1;
 
 	return 0;
 
