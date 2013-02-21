@@ -5898,6 +5898,10 @@ static void __init kingdom_init(void)
 	perflock_init(&kingdom_perflock_data);
 #endif
 
+#ifdef CONFIG_CPU_FREQ_GOV_ONDEMAND_2_PHASE
+	set_two_phase_freq(1134000);
+#endif
+
 #ifdef CONFIG_BT
 	bt_export_bd_address();
 #endif
@@ -6195,125 +6199,6 @@ static void __init kingdom_map_io(void)
 	if (socinfo_init() < 0)
 		printk(KERN_ERR "%s: socinfo_init() failed!\n",
 		       __func__);
-
-	msm8x60_init_tlmm();
-	msm8x60_init_gpiomux(board_data->gpiomux_cfgs);
-	msm8x60_init_uart12dm();
-	msm8x60_init_mmc();
-	msm8x60_init_camera();
-
-#if defined(CONFIG_PMIC8058_OTHC) || defined(CONFIG_PMIC8058_OTHC_MODULE)
-	msm8x60_init_pm8058_othc();
-#endif
-
-	/* Accessory */
-	printk(KERN_INFO "[HS_BOARD] (%s) system_rev = %d, LE = %d\n", __func__,
-	       system_rev, (speed_bin == 0x1) ? 1 : 0);
-	if (system_rev > 2 || speed_bin == 0x1) {
-		htc_headset_pmic_data.key_gpio =
-			PM8058_GPIO_PM_TO_SYS(shooter_AUD_REMO_PRES);
-		htc_headset_mgr_data.headset_config_num =
-			ARRAY_SIZE(htc_headset_mgr_config);
-		htc_headset_mgr_data.headset_config = htc_headset_mgr_config;
-		printk(KERN_INFO "[HS_BOARD] (%s) Set MEMS config\n", __func__);
-	}
-
-	msm8x60_cfg_smsc911x();
-	if (SOCINFO_VERSION_MAJOR(socinfo_get_version()) != 1)
-		platform_add_devices(msm_footswitch_devices,
-				     msm_num_footswitch_devices);
-	platform_add_devices(shooter_devices,
-			     ARRAY_SIZE(shooter_devices));
-
-#ifdef CONFIG_CMDLINE_OPTIONS
-	/* setters for cmdline_gpu */
-	set_kgsl_3d0_freq(cmdline_3dgpu[0], cmdline_3dgpu[1]);
-	set_kgsl_2d0_freq(cmdline_2dgpu);
-	set_kgsl_2d1_freq(cmdline_2dgpu);
-#endif
-
-	/* usb driver won't be loaded in MFG 58 station */
-	if (board_mfg_mode() != 6)
-		shooter_add_usb_devices();
-
-#ifdef CONFIG_USB_EHCI_MSM_72K
-		msm_add_host(0, &msm_usb_host_pdata);
-#endif
-
-	platform_add_devices(asoc_devices,
-			ARRAY_SIZE(asoc_devices));
-
-#ifdef CONFIG_BATTERY_MSM8X60
-		platform_device_register(&msm_charger_device);
-#endif
-#ifdef CONFIG_FB_MSM_HDMI_MSM_PANEL
-		platform_add_devices(hdmi_devices, 1);
-#endif
-
-#if defined(CONFIG_SPI_QUP) || defined(CONFIG_SPI_QUP_MODULE)
-	platform_device_register(&msm_gsbi1_qup_spi_device);
-	platform_device_register(&msm_gsbi2_qup_spi_device);
-#endif
-
-	shooter_init_panel(msm_fb_resources, ARRAY_SIZE(msm_fb_resources));
-
-	fixup_i2c_configs();
-	register_i2c_devices();
-
-	if (ps_type == 1) {
-		i2c_register_board_info(MSM_GSBI10_QUP_I2C_BUS_ID,
-			i2c_isl29028_devices,
-			ARRAY_SIZE(i2c_isl29028_devices));
-	} else if (ps_type == 2) {
-		i2c_register_board_info(MSM_GSBI10_QUP_I2C_BUS_ID,
-			i2c_isl29029_devices,
-			ARRAY_SIZE(i2c_isl29029_devices));
-	} else
-		printk(KERN_DEBUG "No Intersil chips\n");
-
-	platform_device_register(&smsc911x_device);
-
-	msm_pm_set_platform_data(msm_pm_data, ARRAY_SIZE(msm_pm_data));
-	msm_pm_set_rpm_wakeup_irq(RPM_SCSS_CPU0_WAKE_UP_IRQ);
-	msm_cpuidle_set_states(msm_cstates, ARRAY_SIZE(msm_cstates),
-				msm_pm_data);
-	BUG_ON(msm_pm_boot_init(MSM_PM_BOOT_CONFIG_TZ, NULL));
-
-	pm8058_gpios_init();
-
-#ifdef CONFIG_SENSORS_MSM_ADC
-	msm_adc_pdata.target_hw = MSM_8x60;
-#endif
-#ifdef CONFIG_MSM8X60_AUDIO
-	spi_register_board_info(msm_spi_board_info, ARRAY_SIZE(msm_spi_board_info));
-	gpio_tlmm_config(msm_spi_gpio[0], GPIO_CFG_ENABLE);
-	gpio_tlmm_config(msm_spi_gpio[1], GPIO_CFG_ENABLE);
-	gpio_tlmm_config(msm_spi_gpio[2], GPIO_CFG_ENABLE);
-	gpio_tlmm_config(msm_spi_gpio[3], GPIO_CFG_ENABLE);
-	msm_snddev_init();
-	msm_auxpcm_init();
-	shooter_audio_init();
-#endif
-
-	sysinfo_proc_init();
-	properties_kobj = kobject_create_and_add("board_properties", NULL);
-	if (properties_kobj)
-		ret = sysfs_create_group(properties_kobj,
-				&shooter_properties_attr_group);
-
-	shooter_init_keypad();
-	shooter_wifi_init();
-
-	ret = headset_vddp_init_reg(&vddp_reg_headset);
-	if (ret < 0)
-		printk(KERN_ERR "[HS_BOARD]Init sddc vddp power failed\n");
-	ret = headset_vddp_enable_reg(&vddp_reg_headset);	/*Turn on Vddp 2.85V for remote control*/
-	if (ret < 0)
-		printk(KERN_ERR "[HS_BOARD]Enable sddc vddp power failed\n");
-	headset_device_register();
-
-	msm_mpm_set_irq_ignore_list(irq_ignore_tbl, irq_num_ignore_tbl);
-
 }
 
 static void __init kingdom_init_early(void)
