@@ -103,6 +103,7 @@ static struct pll pll2_tbl[] = {
 	{ 188, 0, 1, 1 }, /* 1804800 MHz */
 #ifdef	CONFIG_INSANE_SPEEDS
 	{ 200, 0, 1, 1 }, /* 1920000 MHz */
+	{ 210, 0, 1, 1 }, /* 2016000 MHz */
 #endif
 };
 
@@ -148,9 +149,10 @@ static struct clkctl_acpu_speed acpu_freq_tbl[] = {
 	{ 1, 1401600, PLL_2, 3, 0, UINT_MAX, 1225, VDD_RAW(1225), &pll2_tbl[6]},
 	{ 1, 1516800, PLL_2, 3, 0, UINT_MAX, 1275, VDD_RAW(1275), &pll2_tbl[7]},
 	{ 1, 1708800, PLL_2, 3, 0, UINT_MAX, 1375, VDD_RAW(1375), &pll2_tbl[9]},
-	{ 1, 1804800, PLL_2, 3, 0, UINT_MAX, 1425, VDD_RAW(1425), &pll2_tbl[10]},
+	{ 1, 1804800, PLL_2, 3, 0, UINT_MAX, 1450, VDD_RAW(1450), &pll2_tbl[10]},
 #ifdef	CONFIG_INSANE_SPEEDS
-	{ 1, 1920000, PLL_2, 3, 0, 192000000, 1450, VDD_RAW(1450), &pll2_tbl[11]},
+	{ 1, 1920000, PLL_2, 3, 0, UINT_MAX, 1475, VDD_RAW(1475), &pll2_tbl[11]},
+	{ 1, 2016000, PLL_2, 3, 0, UINT_MAX, 1500, VDD_RAW(1500), &pll2_tbl[12]},
 	{ 0 }
 #else
 	{0}
