@@ -1630,11 +1630,11 @@ endif # PERFLOCK
 config ACPUCLOCK_OVERCLOCKING
 	bool "Enable support for CPU overclocking"
 	default n
-	depends on CPUFREQ
+	depends on CPUFREQ && !PERFLOCK
 	depends on ARCH_MSM7X30
 
-config JESUS_PHONE
-	bool "Enable up to 1.8GHzspeeds"
+config INSANE_SPEEDS
+	bool "Enable 1.92GHz overclock step, possibly unstable"
 	default n
 	depends on ACPUCLOCK_OVERCLOCKING
 	depends on ARCH_MSM7X30
