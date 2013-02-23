@@ -122,7 +122,7 @@ config CPU_FREQ_DEFAULT_GOV_LAGFREE
           driver. Fallback governor will be the performance governor.
 
 config CPU_FREQ_DEFAULT_GOV_SMARTASSV2
-	bool "smartass2"
+	bool "smartassV2"
 	select CPU_FREQ_GOV_SMARTASSV2
 	help
 		Use the CPUFreq governor 'smartassV2' as default.
