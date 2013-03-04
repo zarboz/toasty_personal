@@ -448,11 +448,7 @@ static int bdi_forker_thread(void *ptr)
 				 * If thread creation fails, force writeout of
 				 * the bdi from the thread.
 				 */
-
-				writeback_inodes_wb(&bdi->wb, 1024);
-
 				bdi_flush_io(bdi);
-
 			} else {
 				/*
 				 * The spinlock makes sure we do not lose
