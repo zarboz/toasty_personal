@@ -448,15 +448,11 @@ static int bdi_forker_thread(void *ptr)
 				 * If thread creation fails, force writeout of
 				 * the bdi from the thread.
 				 */
-<<<<<<< HEAD
 
 				writeback_inodes_wb(&bdi->wb, 1024);
 
 				bdi_flush_io(bdi);
 
-=======
-				bdi_flush_io(bdi);
->>>>>>> parent of d39dd61... add dynamic writeback feature from 3.1 (2fast4u88)
 			} else {
 				/*
 				 * The spinlock makes sure we do not lose
